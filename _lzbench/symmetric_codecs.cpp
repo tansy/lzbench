@@ -22,7 +22,7 @@ char *lzbench_bsc_init(size_t insize, size_t level, size_t)
     return 0;
 }
 
-int64_t lzbench_bsc_compress(char *inbuf, size_t insize, char *outbuf, size_t outsize, struct lzb_codec_options *codec_options)
+int64_t lzbench_bsc_compress(char *inbuf, size_t insize, char *outbuf, size_t outsize, struct lzbench_codec_options *codec_options)
 {
     int features = LIBBSC_DEFAULT_FEATURES;
     int lzpHashSize = LIBBSC_DEFAULT_LZPHASHSIZE;
@@ -45,7 +45,7 @@ int64_t lzbench_bsc_compress(char *inbuf, size_t insize, char *outbuf, size_t ou
     return res;
 }
 
-int64_t lzbench_bsc_decompress(char *inbuf, size_t insize, char *outbuf, size_t outsize, struct lzb_codec_options *codec_options)
+int64_t lzbench_bsc_decompress(char *inbuf, size_t insize, char *outbuf, size_t outsize, struct lzbench_codec_options *codec_options)
 {
     int features = LIBBSC_DEFAULT_FEATURES;
     int insize_bsc;
@@ -59,7 +59,7 @@ int64_t lzbench_bsc_decompress(char *inbuf, size_t insize, char *outbuf, size_t 
 
 #ifdef BENCH_HAS_CUDA
 
-int64_t lzbench_bsc_cuda_compress(char *inbuf, size_t insize, char *outbuf, size_t outsize, struct lzb_codec_options *codec_options)
+int64_t lzbench_bsc_cuda_compress(char *inbuf, size_t insize, char *outbuf, size_t outsize, struct lzbench_codec_options *codec_options)
 {
     int features = LIBBSC_DEFAULT_FEATURES | LIBBSC_FEATURE_CUDA;
     int lzpHashSize = LIBBSC_DEFAULT_LZPHASHSIZE;
@@ -82,7 +82,7 @@ int64_t lzbench_bsc_cuda_compress(char *inbuf, size_t insize, char *outbuf, size
     return res;
 }
 
-int64_t lzbench_bsc_cuda_decompress(char *inbuf, size_t insize, char *outbuf, size_t outsize, struct lzb_codec_options *codec_options)
+int64_t lzbench_bsc_cuda_decompress(char *inbuf, size_t insize, char *outbuf, size_t outsize, struct lzbench_codec_options *codec_options)
 {
     int features = LIBBSC_DEFAULT_FEATURES | LIBBSC_FEATURE_CUDA;
     int insize_bsc;
@@ -103,13 +103,13 @@ int64_t lzbench_bsc_cuda_decompress(char *inbuf, size_t insize, char *outbuf, si
 #ifndef BENCH_REMOVE_BZIP2
 #include "bzip2/bzlib.h"
 
-int64_t lzbench_bzip2_compress(char *inbuf, size_t insize, char *outbuf, size_t outsize, struct lzb_codec_options *codec_options)
+int64_t lzbench_bzip2_compress(char *inbuf, size_t insize, char *outbuf, size_t outsize, struct lzbench_codec_options *codec_options)
 {
    unsigned int a_outsize = outsize;
    return BZ2_bzBuffToBuffCompress((char *)outbuf, &a_outsize, (char *)inbuf, (unsigned int)insize, codec_options->level, 0, 0)==BZ_OK?a_outsize:-1;
 }
 
-int64_t lzbench_bzip2_decompress(char *inbuf, size_t insize, char *outbuf, size_t outsize, struct lzb_codec_options *codec_options)
+int64_t lzbench_bzip2_decompress(char *inbuf, size_t insize, char *outbuf, size_t outsize, struct lzbench_codec_options *codec_options)
 {
    unsigned int a_outsize = outsize;
    return BZ2_bzBuffToBuffDecompress((char *)outbuf, &a_outsize, (char *)inbuf, (unsigned int)insize, 0, 0)==BZ_OK?a_outsize:-1;
@@ -122,7 +122,7 @@ int64_t lzbench_bzip2_decompress(char *inbuf, size_t insize, char *outbuf, size_
 #ifndef BENCH_REMOVE_PPMD
 #include "lzma/Ppmd8.h"
 
-int64_t lzbench_ppmd_compress(char* inbuf, size_t insize, char* outbuf, size_t outsize, struct lzb_codec_options *codec_options)
+int64_t lzbench_ppmd_compress(char* inbuf, size_t insize, char* outbuf, size_t outsize, struct lzbench_codec_options *codec_options)
 {
     struct CharWriter
     {
@@ -178,7 +178,7 @@ int64_t lzbench_ppmd_compress(char* inbuf, size_t insize, char* outbuf, size_t o
     return cw.ptr - outbuf;
 }
 
-int64_t lzbench_ppmd_decompress(char* inbuf, size_t insize, char* outbuf, size_t outsize, struct lzb_codec_options *codec_options)
+int64_t lzbench_ppmd_decompress(char* inbuf, size_t insize, char* outbuf, size_t outsize, struct lzbench_codec_options *codec_options)
 {
     struct CharReader
     {
