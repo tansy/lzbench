@@ -10,8 +10,9 @@
 #ifndef BENCH_REMOVE_XZ
 
 #include "xz/src/liblzma/common/common.h"
+#include "codecs.h"
 
-int64_t lzbench_xz_compress(char *inbuf, size_t insize, char *outbuf, size_t outsize, size_t level, size_t ignore1, char* ignore2)
+int64_t lzbench_xz_compress(char *inbuf, size_t insize, char *outbuf, size_t outsize, struct lzb_codec_options *codec_options)
 {
     lzma_options_lzma opt_lzma;
     lzma_stream strm = LZMA_STREAM_INIT;
@@ -38,7 +39,7 @@ int64_t lzbench_xz_compress(char *inbuf, size_t insize, char *outbuf, size_t out
     return (char*)strm.next_out - outbuf;
 }
 
-int64_t lzbench_xz_decompress(char *inbuf, size_t insize, char *outbuf, size_t outsize, size_t ignore1, size_t ignore2, char* ignore3)
+int64_t lzbench_xz_decompress(char *inbuf, size_t insize, char *outbuf, size_t outsize, struct lzb_codec_options *codec_options)
 {
     lzma_stream strm = LZMA_STREAM_INIT;
 
