@@ -232,6 +232,26 @@ int64_t lzbench_lzrw_decompress(char *inbuf, size_t insize, char *outbuf, size_t
 
 
 
+#ifndef BENCH_REMOVE_NZ1
+size_t nanozip_compress(const uint8_t *input, size_t in_size, uint8_t *output, size_t out_size, int window_size);
+size_t nanozip_decompress(const uint8_t *input, size_t in_size, uint8_t *output, size_t out_size);
+
+int64_t lzbench_nz1_compress(char *inbuf, size_t insize, char *outbuf, size_t outsize, codec_options_t *codec_options)
+{
+    ///size_t comp_size = nanozip_compress(data, size, compressed, size*2 + 14, 0); // Pass correct output buffer size
+    return (int64_t)nanozip_compress((const uint8_t*)inbuf, insize, (uint8_t*)outbuf, outsize, 0);
+}
+
+int64_t lzbench_nz1_decompress(char *inbuf, size_t insize, char *outbuf, size_t outsize, codec_options_t *codec_options)
+{
+    ///size_t comp_size = nanozip_decompress(compressed, comp_size, decompressed, size);
+    return (int64_t)nanozip_decompress((const uint8_t*)inbuf, insize, (uint8_t*)outbuf, outsize);
+}
+
+#endif // #ifndef BENCH_REMOVE_NZ1
+
+
+
 #ifndef BENCH_REMOVE_WFLZ
 #include "lz/wflz/wfLZ.h"
 

@@ -77,6 +77,7 @@ Supported compressors
  - [lzo 2.10](http://www.oberhumer.com/opensource/lzo)
  - [lzsse 2019-04-18 (1847c3e827)](https://github.com/ConorStokes/LZSSE)
  - [nvcomp 2.2.0](https://github.com/NVIDIA/nvcomp) - if CUDA is available
+ - [nz1 1.0](https://github.com/Ferki-git-creator/NZ1)
  - [ppmd8 25.01](http://7-zip.org)
  - [quicklz 1.5.0](https://web.archive.org/web/20160110073818/https://quicklz.com/)
  - [slz 1.2.1](http://www.libslz.org/) - only a compressor, uses zlib for decompression

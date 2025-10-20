@@ -598,6 +598,13 @@ else
 endif
 
 
+ifeq "$(DONT_BUILD_NZ1)" "1"
+    DEFINES += -DBENCH_REMOVE_NZ1
+else
+    BUGGY_C_FILES += lz/nz1/nz1.o
+endif
+
+
 ifeq "$(DONT_BUILD_WFLZ)" "1"
     DEFINES += -DBENCH_REMOVE_WFLZ
 else
