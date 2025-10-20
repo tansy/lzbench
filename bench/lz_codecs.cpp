@@ -1162,6 +1162,25 @@ int64_t lzbench_quicklz_decompress(char *inbuf, size_t insize, char *outbuf, siz
 #endif
 
 
+#ifndef BENCH_REMOVE_QUICKLZ_ZIP
+#include "quicklz/quicklz_zip.h"
+
+int64_t lzbench_quicklz_zip_compress(char *inbuf, size_t insize, char *outbuf, size_t outsize, codec_options_t *codec_options)
+{
+    ///unsigned int deflate(unsigned char *source, unsigned char *destination, unsigned int bitoffset, unsigned int size, unsigned int last);
+    return (int64_t)quicklz_zip::deflate((unsigned char*)inbuf, (unsigned char*)outbuf, 0, insize, 1);
+}
+
+#include "zlib/zlib.h"
+int64_t lzbench_zlib_decompress(char *inbuf, size_t insize, char *outbuf, size_t outsize, codec_options_t *codec_options);
+
+int64_t lzbench_quicklz_zip_decompress(char *inbuf, size_t insize, char *outbuf, size_t outsize, codec_options_t *codec_options)
+{
+    return lzbench_zlib_decompress(inbuf, insize, outbuf, outsize, codec_options);
+}
+
+#endif // BENCH_REMOVE_QUICKLZ_ZIP
+
 
 #ifndef BENCH_REMOVE_SNAPPY
 #include "snappy/snappy.h"

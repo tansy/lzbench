@@ -1,4 +1,5 @@
 v2.x.y
+- added QuickLZ ZIP 0.4 (thanks to @tansy)
 - improvement: Automatic chunk size splitting for multi-threading (-T) when -b is not specified
 - improvement: Added the -I# option, which enables compression using # internal (built-in) threads
                when supported. Currently available for the following compressors: bsc, fast-lzma2,

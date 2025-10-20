@@ -409,6 +409,13 @@ int64_t lzbench_memcpy(char *inbuf, size_t insize, char *outbuf, size_t outsize,
     #define lzbench_quicklz_decompress NULL
 #endif
 
+#ifndef BENCH_REMOVE_QUICKLZ_ZIP
+    int64_t lzbench_quicklz_zip_compress(char* inbuf, size_t insize, char* outbuf, size_t outsize, size_t level, size_t, char*);
+    int64_t lzbench_quicklz_zip_decompress(char* inbuf, size_t insize, char* outbuf, size_t outsize, size_t, size_t, char*);
+#else
+    #define lzbench_quicklz_zip_compress NULL
+    #define lzbench_quicklz_zip_decompress NULL
+#endif
 
 #ifndef BENCH_REMOVE_SLZ
     int64_t lzbench_slz_compress(char *inbuf, size_t insize, char *outbuf, size_t outsize, codec_options_t *codec_options);
