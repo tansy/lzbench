@@ -1,45 +1,78 @@
-#!/bin/sh
+#!/bin/bash
 #
 # This source code is licensed under the GPLv2 or GPLv3 license.
 # For additional details, refer to the LICENSE file located in the root
 # directory of this source tree.
 #
 
-# update_repo <http://gh/repo/url> <repo> <branch> ["commands to do"]
+# update_repo <http://gh/repo/url> ["commands to do"]
+
+declare -a array
+
+function SPLIT()
+    {
+    SEP="$1"
+    STR="$2"
+    IFS="$SEP" read -ra array <<< "$STR"
+    for i in "${array[@]}"; do
+        : ;
+    done
+    }
+
+REPO=
+TAG=
+
+NULL=/dev/null # "nul" for cygwin/msys
+WGET=wget
+WGETSO="wget -O-"
+#WGETSO="curl -s"
+
 update_repo()
-{
-    local repo_url="$1"
-    local repo="$2"
-    local branch="$3"
-    shift; shift; shift
+    {
+    repo_url="$1"
+    shift
+    SPLIT '/' "$repo_url"
+    asize=${#array[@]}
+    repo=${array[$(($asize-1))]}
+    owner=${array[$(($asize-2))]}
+
+    latest_tag=$( $WGETSO 2>$NULL "https://api.github.com/repos/$owner/$repo/releases/latest" \
+        | grep -Po '"tag_name": *"\K.*?(?=")' )
+    tag=${latest_tag##v}
+    if [ -z "$tag" ]; then echo "Error: no latest_tag found."; exit 2; fi
+    addr="${repo_url}/archive/refs/tags/${latest_tag}.zip"
+    arch="${latest_tag}.zip"
 
     if [ ! -f "${repo}-${branch}.zip" ]; then
-        wget "${repo_url}/archive/refs/heads/master.zip" && \
-        mv master.zip "${repo}-${branch}.zip"
+        $WGET "${addr}" && \
+        mv $arch "${repo}-${tag}.zip"
     fi
-    local dir="${repo}-${branch}"
-    [ -d $dir ] || unzip -q "${repo}-${branch}.zip"
+    arch="${repo}-${tag}.zip"
+
+    local dir="${repo}-${tag}"
+    [ -d $dir ] || unzip -q "$arch"
 
     mkdir -p "$repo"
 
-    #local cmd="$4"
-    for i in "$@"; do
+    REPO=$repo
+    TAG=$tag
+    for i in "$@"; do # commands
         cmd="$1"
         eval "$cmd"
         shift
     done && \
-        rm -Rf "$dir"
-        rm -f "${repo}-${branch}.zip"
+#        rm -Rf "$dir"
+#        rm -f "$arch"
         :
-}
+    }
 
 usage()
-{
+    {
     echo "update repos/codecs"
     echo "upd-repo <repository>"
-    echo "example: cd path/to/upd-repo zlib"
+    echo "example: cd lzbench/lz/ && sh ../build/upd-repos.sh zlib"
     echo "for available codecs refer to source of main loop"
-}
+    }
 
 
 if [ $# -eq 0 ]
@@ -72,7 +105,9 @@ while [[ $# -gt 0 ]]; do
         update_repo https://github.com/tukaani-project/xz xz master "cp -r xz-master/src xz"
         ;;
     "zlib")
-        update_repo https://github.com/madler/zlib zlib master "cp zlib-master/* zlib"
+        echo "REPO=$REPO"
+        echo "TAG=$TAG"
+        update_repo https://github.com/madler/zlib "cp zlib-$TAG/* zlib"
         ;;
     "zlib-ng")
         update_repo https://github.com/zlib-ng/zlib-ng zlib-ng develop "cp zlib-ng-develop/*.c zlib-ng-develop/*.h zlib-ng" "cp -r zlib-ng-develop/arch zlib-ng" "cp -r zlib-ng-develop/README.md zlib-ng"
